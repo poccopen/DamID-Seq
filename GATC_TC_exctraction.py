@@ -73,7 +73,9 @@ else:
 					start = int(start) - 1
 					# リードの読み出しが"GATC"であれば以下を実行する
 					if re.search(regex_GATCstart, seq):
-						if (chr in dictGATC):
+						if (chr not in dictGATC):
+							dictGATC[chr] = {start:1}
+						else:
 							if (start in dictGATC[chr]):
 								dictTEMP = dictGATC[chr]
 								dictTEMP[start] = dictTEMP[start] + 1
@@ -82,11 +84,12 @@ else:
 								dictTEMP = dictGATC[chr]
 								dictTEMP[start] = 1
 								dictGATC[chr] = dictTEMP
-						else:
-							dictGATC[chr] = {start:1}
+							
 					# リードの読み出しが"TC"であれば以下を実行する
 					if re.search(regex_TCstart, seq):
-						if (chr in dictTC):
+						if (chr not in dictTC):
+							dictTC[chr] = {start:1}
+						else:
 							if (start in dictTC[chr]):
 								dictTEMP = dictTC[chr]
 								dictTEMP[start] = dictTEMP[start] + 1
@@ -95,14 +98,16 @@ else:
 								dictTEMP = dictTC[chr]
 								dictTEMP[start] = 1
 								dictTC[chr] = dictTEMP
-						else:
-							dictTC[chr] = {start:1}
+
+							
 				# リードが相補鎖にマップされていれば以下を実行する
 				else:
 					# リードの読み出しが"GATC"であれば以下を実行する
 					if re.search(regex_GATCend, seq):
 						start = int(start) + readlength - 5
-						if (chr in dictGATC):
+						if (chr not in dictGATC):
+							dictGATC[chr] = {start:1}
+						else:
 							if (start in dictGATC[chr]):
 								dictTEMP = dictGATC[chr]
 								dictTEMP[start] = dictTEMP[start] + 1
@@ -111,12 +116,12 @@ else:
 								dictTEMP = dictGATC[chr]
 								dictTEMP[start] = 1
 								dictGATC[chr] = dictTEMP
-						else:
-							dictGATC[chr] = {start:1}
 					# リードの読み出しが"GA"であれば以下を実行する
 					if re.search(regex_AGend, seq):
 						start = int(start) + readlength - 1
-						if (chr in dictTC):
+						if (chr not in dictTC):
+							dictTC[chr] = {start:1}
+						else:
 							if (start in dictTC[chr]):
 								dictTEMP = dictTC[chr]
 								dictTEMP[start] = dictTEMP[start] + 1
@@ -125,9 +130,8 @@ else:
 								dictTEMP = dictTC[chr]
 								dictTEMP[start] = 1
 								dictTC[chr] = dictTEMP
-						else:
-							dictTC[chr] = {start:1}
-
+							
+# 以下は抽出結果をファイルに書き出す処理
 outputGATCfile = open(outputGATC, 'w')						
 for keychr in dictGATC:
 	for keystart in dictGATC[keychr]:
