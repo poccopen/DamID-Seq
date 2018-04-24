@@ -131,7 +131,7 @@ else:
 								dictTEMP[start] = 1
 								dictTC[chr] = dictTEMP
 							
-# 以下は抽出結果をファイルに書き出す処理
+# 以下は抽出結果を出力ファイル（Bedgraph形式）に書き出す処理
 outputGATCfile = open(outputGATC, 'w')						
 for keychr in dictGATC:
 	for keystart in dictGATC[keychr]:
