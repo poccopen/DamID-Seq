@@ -3,7 +3,7 @@ DamID-Seqデータ解析のためのPythonスクリプトを置いてありま�
 
 ## GATC_TC_extraction.py
 #### [使い方]  
-```python3 GATC_TC_extraction.py [filename.sam]```
+```$ python3 GATC_TC_extraction.py [filename.sam]```
 
 #### [目的]
 読み始めの配列が"GATC"であるリードと"TC"であるリードを別々に集計します。
@@ -18,7 +18,7 @@ Bedgraph形式のファイルをふたつ出力します。
 
 ## mrate.py
 #### [使い方]
-```python3 mrate.py [filename.GATC.bedgraph] [filename.TC.bedgraph]```
+```$ python3 mrate.py [filename.GATC.bedgraph] [filename.TC.bedgraph]```
 
 #### [目的]
 GATC_TC_extraction.py によって出力されたふたつのファイルから各ゲノム座標でのメチル化率を計算します。
