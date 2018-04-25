@@ -2,9 +2,8 @@
 DamID-Seqデータ解析のためのPythonスクリプトを置いてあります。
 
 ## GATC_TC_extraction.py
-[使い方]
-
-python3 GATC_TC_extraction.py [filename.sam]
+###使い方
+`python3 GATC_TC_extraction.py [filename.sam]`
 
 [目的]
 
