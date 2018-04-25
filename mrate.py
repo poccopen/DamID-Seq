@@ -65,32 +65,45 @@ else:
 	# Linux内のsortコマンドを利用します
 	# sort [ソートしたいファイル] [オプション] の順でリストに格納されている必要がありそうです
 	cmd = ['sort', tempoutput, '-k1,1d', '-k2,2n']
-	sort結果はbytes型で返ってくるので、str型にデコードする
+	# sort結果はbytes型で返ってくるので、str型にデコードする
 	sorted = subprocess.check_output(cmd).decode()
 	
-	
+	# sort結果をふたつめの一時ファイルに書き出す
 	sortedoutputfilename = tempoutput + ".sorted"
 	sortedoutputfile = open(sortedoutputfilename, 'w')
 	sortedoutputfile.write(sorted)
 	sortedoutputfile.close()
 	
+	# 最終出力ファイル（メチル化率計算結果）を追記モードでオープンする
 	outputfile = open(outputfilename, 'a')
+	# 配列pl (previous line)を初期化しておく
 	pl = []
+	# 配列cl (current line)を初期化しておく
 	cl = []
 	
+	# sort結果全体を改行文字でスプリットする
 	sorted = sorted.split("\n")
+	# sort結果の各行について以下の処理を実行する
 	for cl in sorted:
-		
+		# 各行をタブ区切り文字でスプリットする
 		cl = cl.split("\t")
-		
+		# listの要素数が5でないときはclの内容をplに代入して次の行に移る
 		if (len(pl) != 5 or len(cl) != 5):
 			pl = cl
 			continue
+		# 以下の3条件が同時に成立するときのみ以下の処理を実行する
+		# 条件1 plの末尾の要素が"GATC"である
+		# 条件2 clの末尾の要素が"TC"である
+		# 条件3 plの座標とclの座標の差が2である
 		if (pl[4] == "GATC" and cl[4] == "TC" and int(cl[1]) == int(pl[1])+2):
+			# メチル化率を計算し、clの第4カラムの値と入れ替える
 			cl[3] = int(cl[3]) / (int(pl[3]) + int(cl[3]))
+			# 最終出力ファイルにclの内容を書き出す
 			outputfile.write(str(cl[0]) + "\t" + str(cl[1]) + "\t" + str(cl[2]) + "\t" + str(cl[3]) + "\t" + str(cl[4]) + "\n")
+			# clの内容をplに代入して次の行に移る
 			pl = cl
 			continue
+		# 上記の3条件のいずれかが成立しないときはclの内容をplに代入して次の行に移る
 		else:
 			pl = cl
 			continue
