@@ -65,7 +65,7 @@ else:
 	# Linux内のsortコマンドを利用します
 	# sort [ソートしたいファイル] [オプション] の順でリストに格納されている必要がありそうです
 	cmd = ['sort', tempoutput, '-k1,1d', '-k2,2n']
-	" sort結果はbytes型で返ってくるので、str型にデコードする
+	sort結果はbytes型で返ってくるので、str型にデコードする
 	sorted = subprocess.check_output(cmd).decode()
 	
 	
