@@ -36,6 +36,7 @@ else:
 	with open(inputGATCfilename) as input1:
 		# 一行ずつ読み出して変数lineに格納する
 		for line in input1:
+			# 各行の末尾に"GATC"を追記して一時出力ファイルに追記する
 			list1 = line.split()
 			list1.append("GATC")
 			string = ""
@@ -49,6 +50,7 @@ else:
 	with open(inputTCfilename) as input2:
 		# 一行ずつ読み出して変数lineに格納する
 		for line in input2:
+			# 各行の末尾に"TC"を追記して一時出力ファイルに追記する
 			list1 = line.split()
 			list1.append("TC")
 			string = ""
@@ -60,7 +62,10 @@ else:
 	tempoutputfile.close()
 	
 	# 一時出力ファイルをソートし、ソート結果を変数sortedに格納する
+	# Linux内のsortコマンドを利用します
+	# sort [ソートしたいファイル] [オプション] の順でリストに格納されている必要がありそうです
 	cmd = ['sort', tempoutput, '-k1,1d', '-k2,2n']
+	" sort結果はbytes型で返ってくるので、str型にデコードする
 	sorted = subprocess.check_output(cmd).decode()
 	
 	
@@ -70,8 +75,8 @@ else:
 	sortedoutputfile.close()
 	
 	outputfile = open(outputfilename, 'a')
-	pl = ["",0,0,0,""]
-	cl = ["",0,0,0,""]
+	pl = []
+	cl = []
 	
 	sorted = sorted.split("\n")
 	for cl in sorted:
