@@ -11,24 +11,35 @@ argvs = sys.argv
 # コマンドライン引数の数を変数argcに格納する
 argc = len(argvs)
 
+# 入力するBegraphファイルふたつが指定されていないときは使い方を表示して終了する
+if argc < 4:
+	print("Usage: python3 {} [input.GATC.bedgraph] [input.TC.bedgraph] [GATCpos.bedgraph]".format(argvs[0]))
+	sys.exit()
+
 # ひとつめの入力Bedgraphファイル名を変数inputGATCfilenameに格納する
 inputGATCfilename = argvs[1]
 # ふたつめ入力Bedgraphファイル名を変数inputTCfilenameに格納する
 inputTCfilename = argvs[2]
+# みっつめの入力Bedgraphファイル名を変数inputPosfilenameに格納する
+inputPosfilename = argvs[3]
 # 出力ファイル名を変数outputfilenameに格納する
 outputfilename = inputGATCfilename.replace(".GATC.bedgraph", ".mrate.bedgraph")
 # 一時出力ファイル名を変数tempoutputに格納する
 tempoutput = inputGATCfilename.replace(".GATC.bedgraph", ".temp.bedgraph")
 
-# 入力するBegraphファイルふたつが指定されていないときは使い方を表示して終了する
-if argc < 3:
-	print("Usage: python3 {} [input.GATC.bedgraph] [input.TC.bedgraph]".format(argvs[0]))
+
 # ひとつめの入力ファイル名の末尾が".GATC.bedgraph"でないときは使い方を表示して終了する
-elif re.search(r'\.GATC\.bedgraph$', inputGATCfilename) == None:
-	print("Usage: python3 {} [input.GATC.bedgraph] [input.TC.bedgraph]".format(argvs[0]))
+if re.search(r'\.GATC\.bedgraph$', inputGATCfilename) == None:
+	print("Usage: python3 {} [input.GATC.bedgraph] [input.TC.bedgraph] [GATCpos.bedgraph]".format(argvs[0]))
+	sys.exit()
 # ふたつめの入力ファイル名の末尾が".TC.bedgraph"でないときは使い方を表示して終了する
 elif re.search(r'\.TC\.bedgraph$', inputTCfilename) == None:
-	print("Usage: python3 {} [input.GATC.bedgraph] [input.TC.bedgraph]".format(argvs[0]))
+	print("Usage: python3 {} [input.GATC.bedgraph] [input.TC.bedgraph] [GATCpos.bedgraph]".format(argvs[0]))
+	sys.exit()
+# みっつめの入力ファイル名の末尾が"GATCpos.bedgraph"でないときは使い方を表示して終了する
+elif re.search(r'GATCpos\.bedgraph$', inputPosfilename) == None:
+	print("Usage: python3 {} [input.GATC.bedgraph] [input.TC.bedgraph] [GATCpos.bedgraph]".format(argvs[0]))
+	sys.exit()
 # 入力ファイル名の末尾に問題がないときは以下を実行する
 else:
 	# 一時出力ファイルを追加書き込み用にオープンする
@@ -60,12 +71,24 @@ else:
 			string = re.sub(r'^\t', "", string)
 			string = string + "\n"
 			tempoutputfile.write(string)
+	
+	# みっつめの入力ファイルをオープンし、一時出力ファイルに内容を追記する
+	with open(inputPosfilename) as input3:
+		for line in input3:
+			list1 = line.split()
+			string = ""
+			for s in list1:
+				string = string + "\t" + str(s)
+			string = re.sub(r'^\t', "", string)
+			string = string + "\n"
+			tempoutputfile.write(string)
+	
 	tempoutputfile.close()
 	
 	# 一時出力ファイルをソートし、ソート結果を変数sortedに格納する
 	# Linux内のsortコマンドを利用します
 	# sort [ソートしたいファイル] [オプション] の順でリストに格納されている必要がありそうです
-	cmd = ['sort', tempoutput, '-k1,1d', '-k2,2n']
+	cmd = ['sort', tempoutput, '-k1,1d', '-k2,2n', '-k4,4n']
 	# sort結果はbytes型で返ってくるので、str型にデコードする
 	sorted = subprocess.check_output(cmd).decode()
 	
@@ -93,10 +116,21 @@ else:
 			pl = cl
 			continue
 		# 以下の3条件が同時に成立するときのみ以下の処理を実行する
+		# 条件1 plの末尾の要素が"posG_in_GATC"である
+		# 条件2 clの末尾の要素が"TC"である
+		# 条件3 plの座標とclの座標の差が2である
+		if (pl[4] == "posG_in_GATC" and cl[4] == "TC" and int(cl[1]) == int(pl[1])+2):
+			# メチル化率=100%、clの第4カラムの値と入れ替える
+			cl[3] = 1
+			outputfile.write(str(cl[0]) + "\t" + str(cl[1]) + "\t" + str(cl[2]) + "\t" + str(cl[3]) + "\t" + str(cl[4]) + "\n")
+			# clの内容をplに代入して次の行に移る
+			pl = cl
+			continue		
+		# 以下の3条件が同時に成立するときのみ以下の処理を実行する
 		# 条件1 plの末尾の要素が"GATC"である
 		# 条件2 clの末尾の要素が"TC"である
 		# 条件3 plの座標とclの座標の差が2である
-		if (pl[4] == "GATC" and cl[4] == "TC" and int(cl[1]) == int(pl[1])+2):
+		elif (pl[4] == "GATC" and cl[4] == "TC" and int(cl[1]) == int(pl[1])+2):
 			# メチル化率を計算し、clの第4カラムの値と入れ替える
 			cl[3] = int(cl[3]) / (int(pl[3]) + int(cl[3]))
 			# 最終出力ファイルにclの内容を書き出す
