@@ -18,10 +18,11 @@ Bedgraph形式のファイルをふたつ出力します。
 
 ## mrate.py
 #### [使い方]
-```$ python3 mrate.py [filename.GATC.bedgraph] [filename.TC.bedgraph] [GATCpos.bedgraph]```
+```$ python3 mrate.py [filename.GATC.bedgraph] [filename.TC.bedgraph] [GATCpos.bedgraph] [リード数足切り閾値]```
 
 #### [目的]
 GATC_TC_extraction.py によって出力されたふたつのファイルから各ゲノム座標でのメチル化率を計算します。
+各GATCポジションについて、(GATCリード数+TCリード数)≧(リード数足切り閾値）のときだけメチル化率を出力します。（180607追加）
 
 #### [入力ファイル]
 GATC_TC_extraction.py によって出力されたふたつのBedgraphファイル および ゲノム中のすべてのGATCの座標を格納したBedgraph の合計3ファイルを入力とします。
