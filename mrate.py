@@ -12,8 +12,8 @@ argvs = sys.argv
 argc = len(argvs)
 
 # 入力するBegraphファイルふたつが指定されていないときは使い方を表示して終了する
-if argc < 4:
-	print("Usage: python3 {} [input.GATC.bedgraph] [input.TC.bedgraph] [GATCpos.bedgraph]".format(argvs[0]))
+if argc < 5:
+	print("Usage: python3 {} [input.GATC.bedgraph] [input.TC.bedgraph] [GATCpos.bedgraph] [Read number threshold]".format(argvs[0]))
 	sys.exit()
 
 # ひとつめの入力Bedgraphファイル名を変数inputGATCfilenameに格納する
@@ -22,6 +22,8 @@ inputGATCfilename = argvs[1]
 inputTCfilename = argvs[2]
 # みっつめの入力Bedgraphファイル名を変数inputPosfilenameに格納する
 inputPosfilename = argvs[3]
+# リード数足切りのための閾値を変数readNumberThresholdに格納する
+readNumberThreshold = int(argvs[4])
 # 出力ファイル名を変数outputfilenameに格納する
 outputfilename = inputGATCfilename.replace(".GATC.bedgraph", ".mrate.bedgraph")
 # 一時出力ファイル名を変数tempoutputに格納する
@@ -133,8 +135,9 @@ else:
 		elif (pl[4] == "GATC" and cl[4] == "TC" and int(cl[1]) == int(pl[1])+2):
 			# メチル化率を計算し、clの第4カラムの値と入れ替える
 			cl[3] = int(cl[3]) / (int(pl[3]) + int(cl[3]))
-			# 最終出力ファイルにclの内容を書き出す
-			outputfile.write(str(cl[0]) + "\t" + str(cl[1]) + "\t" + str(cl[2]) + "\t" + str(cl[3]) + "\t" + str(cl[4]) + "\n")
+			# 分母がリード数足切り閾値以上ならば最終出力ファイルにclの内容を書き出す
+			if ((int(pl[3]) + int(cl[3])) >= readNumberThreshold):
+				outputfile.write(str(cl[0]) + "\t" + str(cl[1]) + "\t" + str(cl[2]) + "\t" + str(cl[3]) + "\t" + str(cl[4]) + "\n")
 			# clの内容をplに代入して次の行に移る
 			pl = cl
 			continue
