@@ -122,9 +122,11 @@ else:
 		# 条件2 clの末尾の要素が"TC"である
 		# 条件3 plの座標とclの座標の差が2である
 		if (pl[4] == "posG_in_GATC" and cl[4] == "TC" and int(cl[1]) == int(pl[1])+2):
-			# メチル化率=100%、clの第4カラムの値と入れ替える
-			cl[3] = 1
-			outputfile.write(str(cl[0]) + "\t" + str(cl[1]) + "\t" + str(cl[2]) + "\t" + str(cl[3]) + "\t" + str(cl[4]) + "\n")
+			# リード数が足切り閾値以上ならば以下を実行する
+			if (int(cl[3]) >= readNumberThreshold):
+				# メチル化率=100%、clの第4カラムの値と入れ替える
+				cl[3] = 1
+				outputfile.write(str(cl[0]) + "\t" + str(cl[1]) + "\t" + str(cl[2]) + "\t" + str(cl[3]) + "\t" + str(cl[4]) + "\n")
 			# clの内容をplに代入して次の行に移る
 			pl = cl
 			continue		
@@ -133,10 +135,11 @@ else:
 		# 条件2 clの末尾の要素が"TC"である
 		# 条件3 plの座標とclの座標の差が2である
 		elif (pl[4] == "GATC" and cl[4] == "TC" and int(cl[1]) == int(pl[1])+2):
-			# メチル化率を計算し、clの第4カラムの値と入れ替える
-			cl[3] = int(cl[3]) / (int(pl[3]) + int(cl[3]))
-			# 分母がリード数足切り閾値以上ならば最終出力ファイルにclの内容を書き出す
+			# 分母がリード数足切り閾値以上ならば以下を実行する
 			if ((int(pl[3]) + int(cl[3])) >= readNumberThreshold):
+				# メチル化率を計算し、clの第4カラムの値と入れ替える
+				cl[3] = int(cl[3]) / (int(pl[3]) + int(cl[3]))
+				# 最終出力ファイルにclの内容を書き出す
 				outputfile.write(str(cl[0]) + "\t" + str(cl[1]) + "\t" + str(cl[2]) + "\t" + str(cl[3]) + "\t" + str(cl[4]) + "\n")
 			# clの内容をplに代入して次の行に移る
 			pl = cl
