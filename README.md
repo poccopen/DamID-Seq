@@ -35,3 +35,19 @@ Bedgraph形式のファイルを3つ出力します。
 - filename.temp.bedgraph （一時ファイルですが念のために残しておきます）
 - filename.temp.bedgraph.sorted （上記の一時ファイルを染色体順・ゲノム座標順にソートしたもの。念の為に残しておきます）
 - filename.mrate.bedgraph （メチル化率の計算結果。各メチル化率は"T"の座標にアサインされます）
+
+## readnum.py
+#### [使い方]
+```$ python3 mrate.py [filename.GATC.bedgraph] [filename.TC.bedgraph] [GATCpos.bedgraph]```
+
+#### [目的]
+GATC_TC_extraction.py によって出力されたふたつのファイルから各ゲノム座標でのリード数の和を計算します。
+
+#### [入力ファイル]
+GATC_TC_extraction.py によって出力されたふたつのBedgraphファイル および ゲノム中のすべてのGATCの座標を格納したBedgraph の合計3ファイルを入力とします。
+
+#### [出力ファイル]
+Bedgraph形式のファイルを3つ出力します。
+- filename.temp.bedgraph （一時ファイルですが念のために残しておきます）
+- filename.temp.bedgraph.sorted （上記の一時ファイルを染色体順・ゲノム座標順にソートしたもの。念の為に残しておきます）
+- filename..bedgraph （メチル化率の計算結果。各メチル化率は"T"の座標にアサインされます）
