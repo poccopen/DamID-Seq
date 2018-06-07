@@ -139,8 +139,8 @@ else:
 			if ((int(pl[3]) + int(cl[3])) >= readNumberThreshold):
 				# メチル化率を計算し、clの第4カラムの値と入れ替える
 				cl[3] = int(cl[3]) / (int(pl[3]) + int(cl[3]))
-				# 最終出力ファイルにclの内容を書き出す
-				outputfile.write(str(cl[0]) + "\t" + str(cl[1]) + "\t" + str(cl[2]) + "\t" + str(cl[3]) + "\t" + str(cl[4]) + "\n")
+				# 最終出力ファイルにplおよびclの内容を書き出す
+				outputfile.write(str(pl[0]) + "\t" + str(pl[1]) + "\t" + str(pl[2]) + "\t" + str(cl[3]) + "\t" + str(cl[4]) + "\n")
 			# clの内容をplに代入して次の行に移る
 			pl = cl
 			continue
