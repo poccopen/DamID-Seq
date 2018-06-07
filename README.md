@@ -50,4 +50,4 @@ GATC_TC_extraction.py によって出力されたふたつのBedgraphファイ�
 Bedgraph形式のファイルを3つ出力します。
 - filename.temp.bedgraph （一時ファイルですが念のために残しておきます）
 - filename.temp.bedgraph.sorted （上記の一時ファイルを染色体順・ゲノム座標順にソートしたもの。念の為に残しておきます）
-- filename..bedgraph （メチル化率の計算結果。各メチル化率は"T"の座標にアサインされます）
+- filename.readnum.bedgraph （リード数の集計結果。リードカウントは"G"の位置にアサインされます）
