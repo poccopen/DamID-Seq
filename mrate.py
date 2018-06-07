@@ -144,6 +144,18 @@ else:
 			# clの内容をplに代入して次の行に移る
 			pl = cl
 			continue
+		# 以下の条件が同時に成立するときのみ以下の処理を実行する
+		# 条件1 plの末尾の要素が"GATC"である
+		# 条件2 clの末尾の要素が"posG_in_GATC"である
+		elif (pl[4] == "GATC" and cl[4] == "posG_in_GATC"):
+			# リード数が足切り閾値以上ならば以下を実行する
+			if (int(pl[3]) >= readNumberThreshold):
+				# メチル化率=0%、plの第4カラムの値と入れ替える
+				pl[3] = 0
+				outputfile.write(str(pl[0]) + "\t" + str(pl[1]) + "\t" + str(pl[2]) + "\t" + str(pl[3]) + "\t" + str(pl[4]) + "\n")
+			# clの内容をplに代入して次の行に移る
+			pl = cl
+			continue
 		# 上記の3条件のいずれかが成立しないときはclの内容をplに代入して次の行に移る
 		else:
 			pl = cl
