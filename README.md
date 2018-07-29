@@ -38,7 +38,7 @@ Bedgraph形式のファイルを3つ出力します。
 
 ## readnum.py
 #### [使い方]
-```$ python3 mrate.py [filename.GATC.bedgraph] [filename.TC.bedgraph] [GATCpos.bedgraph]```
+```$ python3 readnum.py [filename.GATC.bedgraph] [filename.TC.bedgraph] [GATCpos.bedgraph]```
 
 #### [目的]
 GATC_TC_extraction.py によって出力されたふたつのファイルから各ゲノム座標でのリード数の和を計算します。
